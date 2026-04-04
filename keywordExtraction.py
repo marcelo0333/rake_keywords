@@ -11,7 +11,7 @@ nltk.download('punkt')
 connection = psycopg2.connect(user="postgres",
                               password="1234",
                               host="localhost",
-                              port="5433",
+                              port="5432",
                               database="eventsDB")
 
 # r = Rake(language="portuguese")
@@ -29,13 +29,13 @@ def extract_and_store_keyword(description, event_id):
     with connection.cursor() as cursor:
         for keyword, _ in keywordsfromyake:  # Ajuste aqui
             # Verificar se a palavra-chave já existe na tabela keywords
-            cursor.execute("SELECT keyword_id FROM keywords WHERE name_keyword = %s", (keyword,))
+            cursor.execute("SELECT id FROM keywords WHERE name_keywords = %s", (keyword,))
             existing_keyword = cursor.fetchone()
             if existing_keyword:
                 keyword_id = existing_keyword[0]
             else:
                 # Inserir a palavra-chave na tabela keywords
-                sql = "INSERT INTO keywords (name_keyword) VALUES (%s) RETURNING keyword_id"
+                sql = "INSERT INTO keywords (name_keywords) VALUES (%s) RETURNING id"
                 cursor.execute(sql, (keyword,))
                 keyword_id = cursor.fetchone()[0]
 
@@ -64,8 +64,8 @@ def extract_and_store_keywords_for_events():
     with connection.cursor() as cursor:
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS keywords (
-                keyword_id SERIAL PRIMARY KEY,
-                name_keyword VARCHAR(255) UNIQUE
+                id SERIAL PRIMARY KEY,
+                name_keywords VARCHAR(255) UNIQUE
             );
         """)
         cursor.execute("""
