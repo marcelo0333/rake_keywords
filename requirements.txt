@@ -1,0 +1,5 @@
+yake
+rake-nltk
+pandas
+psycopg2-binary
+nltk

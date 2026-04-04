@@ -71,7 +71,7 @@ def extract_and_store_keywords_for_events():
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS events_to_keywords (
                 event_id INT REFERENCES events(event_id),
-                keyword_id INT REFERENCES keywords(keyword_id),
+                keyword_id INT REFERENCES keywords(id),
                 PRIMARY KEY (event_id, keyword_id)
             );
         """)
