@@ -29,13 +29,13 @@ def extract_and_store_keyword(description, event_id):
     with connection.cursor() as cursor:
         for keyword, _ in keywordsfromyake:  # Ajuste aqui
             # Verificar se a palavra-chave já existe na tabela keywords
-            cursor.execute("SELECT id FROM keywords WHERE name_keywords = %s", (keyword,))
+            cursor.execute("SELECT keyword_id FROM keywords WHERE name_keywords = %s", (keyword,))
             existing_keyword = cursor.fetchone()
             if existing_keyword:
                 keyword_id = existing_keyword[0]
             else:
                 # Inserir a palavra-chave na tabela keywords
-                sql = "INSERT INTO keywords (name_keywords) VALUES (%s) RETURNING id"
+                sql = "INSERT INTO keywords (name_keywords) VALUES (%s) RETURNING keyword_id"
                 cursor.execute(sql, (keyword,))
                 keyword_id = cursor.fetchone()[0]
 
@@ -64,14 +64,14 @@ def extract_and_store_keywords_for_events():
     with connection.cursor() as cursor:
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS keywords (
-                id SERIAL PRIMARY KEY,
+                keyword_id SERIAL PRIMARY KEY,
                 name_keywords VARCHAR(255) UNIQUE
             );
         """)
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS events_to_keywords (
                 event_id INT REFERENCES events(event_id),
-                keyword_id INT REFERENCES keywords(id),
+                keyword_id INT REFERENCES keywords(keyword_id),
                 PRIMARY KEY (event_id, keyword_id)
             );
         """)
