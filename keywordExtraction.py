@@ -1,18 +1,17 @@
 import yake
-from rake_nltk import Rake
 import pandas as pd
 import psycopg2
+import os
 import time
 import nltk
 nltk.download('stopwords')
-import nltk
 nltk.download('punkt')
 
-connection = psycopg2.connect(user="postgres",
-                              password="1234",
-                              host="localhost",
-                              port="5432",
-                              database="eventsDB")
+connection = psycopg2.connect(user=os.environ.get("DB_USER", "postgres"),
+                              password=os.environ["DB_PASSWORD"],
+                              host=os.environ.get("DB_HOST", "localhost"),
+                              port=os.environ.get("DB_PORT", "5432"),
+                              database=os.environ.get("DB_NAME", "eventsDB"))
 
 # r = Rake(language="portuguese")
 language = "pt"
